@@ -1,0 +1,365 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="FinanceModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Companys">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Symbol" Type="nchar" MaxLength="6" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" />
+          <Property Name="LastSale" Type="money" />
+          <Property Name="MarketCapital" Type="money" />
+          <Property Name="ADRTSO" Type="nchar" MaxLength="50" />
+          <Property Name="IPOYear" Type="smallint" />
+          <Property Name="Sector" Type="nchar" MaxLength="50" />
+          <Property Name="Industry" Type="nvarchar(max)" />
+          <Property Name="QuoteSite" Type="nvarchar(max)" />
+          <Property Name="Exchange" Type="nchar" MaxLength="6" />
+        </EntityType>
+        <EntityType Name="IncomeStatement">
+          <Key>
+            <PropertyRef Name="CompanyId" />
+            <PropertyRef Name="StatementId" />
+            <PropertyRef Name="StatementDate" />
+          </Key>
+          <Property Name="CompanyId" Type="int" Nullable="false" />
+          <Property Name="StatementId" Type="int" Nullable="false" />
+          <Property Name="StatementDate" Type="date" Nullable="false" />
+          <Property Name="TotalRevenue" Type="money" />
+          <Property Name="CostofRevenue" Type="money" />
+          <Property Name="GrossProfit" Type="money" />
+          <Property Name="OperatingExpenses" Type="money" />
+          <Property Name="SalesGenAdmin" Type="money" />
+          <Property Name="NonRecurringItems" Type="money" />
+          <Property Name="OtherOperatingItems" Type="money" />
+          <Property Name="OperatingIncome" Type="money" />
+          <Property Name="AddlIncExpitems" Type="money" />
+          <Property Name="EarningsBefIntTax" Type="money" />
+          <Property Name="InterestExpense" Type="money" />
+          <Property Name="EarningsBeforeTax" Type="money" />
+          <Property Name="IncomeTax" Type="money" />
+          <Property Name="MinorityInterest" Type="money" />
+          <Property Name="EquityEarnLossUnconSubs" Type="money" />
+          <Property Name="NetIncomeContOperations" Type="money" />
+          <Property Name="NetIncome" Type="money" />
+          <Property Name="NetIncApptoComShareholders" Type="money" />
+        </EntityType>
+        <Function Name="GetCompanyName" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="varchar">
+          <Parameter Name="id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="GetIndustryName" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="varchar">
+          <Parameter Name="symbol" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="GetMaxDate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="date">
+          <Parameter Name="symbol" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="GetMaxDateRevenue" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="money">
+          <Parameter Name="symbol" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="GetSectorName" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="varchar">
+          <Parameter Name="symbol" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="getSectorsByIPO" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="IPOYear" Type="int" Mode="In" />
+        </Function>
+        <Function Name="proc_LessRevenuePeers" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="symbol" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="proc_MoreRevenuePeers" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="symbol" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="ufn_LessRevenuePeers" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="symbol" Type="nvarchar" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="Revenue" Type="money" />
+                <Property Name="CompanyName" Type="varchar" MaxLength="250" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="ufn_MaxStmtDate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="symbol" Type="nvarchar" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="companyId" Type="int" Nullable="false" />
+                <Property Name="StatementDate" Type="date" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="ufn_MoreRevenuePeers" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="symbol" Type="nvarchar" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="Revenue" Type="money" />
+                <Property Name="CompanyName" Type="varchar" MaxLength="250" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="ufn_TargetRevenue" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="symbol" Type="nvarchar" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="Revenue" Type="money" />
+                <Property Name="Name" Type="varchar" MaxLength="250" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <EntityContainer Name="FinanceModelStoreContainer">
+          <EntitySet Name="Companys" EntityType="Self.Companys" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="IncomeStatement" EntityType="Self.IncomeStatement" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="FinanceModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <ComplexType Name="ufn_LessRevenuePeers_Result">
+          <Property Name="Revenue" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="CompanyName" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+        </ComplexType>
+        <ComplexType Name="ufn_MaxStmtDate_Result">
+          <Property Name="companyId" Type="Int32" Nullable="false" />
+          <Property Name="StatementDate" Type="DateTime" />
+        </ComplexType>
+        <ComplexType Name="ufn_MoreRevenuePeers_Result">
+          <Property Name="Revenue" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="CompanyName" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+        </ComplexType>
+        <ComplexType Name="ufn_TargetRevenue_Result">
+          <Property Name="Revenue" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="Name" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+        </ComplexType>
+        <EntityType Name="Company">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Symbol" Type="String" MaxLength="6" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="LastSale" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="MarketCapital" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="ADRTSO" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+          <Property Name="IPOYear" Type="Int16" />
+          <Property Name="Sector" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+          <Property Name="Industry" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="QuoteSite" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Exchange" Type="String" MaxLength="6" FixedLength="true" Unicode="true" />
+        </EntityType>
+        <EntityType Name="IncomeStatement">
+          <Key>
+            <PropertyRef Name="CompanyId" />
+            <PropertyRef Name="StatementId" />
+            <PropertyRef Name="StatementDate" />
+          </Key>
+          <Property Name="CompanyId" Type="Int32" Nullable="false" />
+          <Property Name="StatementId" Type="Int32" Nullable="false" />
+          <Property Name="StatementDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="TotalRevenue" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="CostofRevenue" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="GrossProfit" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="OperatingExpenses" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="SalesGenAdmin" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="NonRecurringItems" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="OtherOperatingItems" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="OperatingIncome" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="AddlIncExpitems" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="EarningsBefIntTax" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="InterestExpense" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="EarningsBeforeTax" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="IncomeTax" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="MinorityInterest" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="EquityEarnLossUnconSubs" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="NetIncomeContOperations" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="NetIncome" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="NetIncApptoComShareholders" Type="Decimal" Precision="19" Scale="4" />
+        </EntityType>
+        <EntityContainer Name="FinanceEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Companys" EntityType="Self.Company" />
+          <EntitySet Name="IncomeStatements" EntityType="Self.IncomeStatement" />
+          <FunctionImport Name="ufn_LessRevenuePeers" IsComposable="true" ReturnType="Collection(FinanceModel.ufn_LessRevenuePeers_Result)">
+            <Parameter Name="symbol" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="ufn_MaxStmtDate" IsComposable="true" ReturnType="Collection(FinanceModel.ufn_MaxStmtDate_Result)">
+            <Parameter Name="symbol" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="ufn_MoreRevenuePeers" IsComposable="true" ReturnType="Collection(FinanceModel.ufn_MoreRevenuePeers_Result)">
+            <Parameter Name="symbol" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="ufn_TargetRevenue" IsComposable="true" ReturnType="Collection(FinanceModel.ufn_TargetRevenue_Result)">
+            <Parameter Name="symbol" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="getSectorsByIPO" ReturnType="Collection(FinanceModel.getSectorsByIPO_Result)">
+            <Parameter Name="IPOYear" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="proc_LessRevenuePeers" ReturnType="Collection(FinanceModel.proc_LessRevenuePeers_Result)">
+            <Parameter Name="symbol" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="proc_MoreRevenuePeers" ReturnType="Collection(FinanceModel.proc_MoreRevenuePeers_Result)">
+            <Parameter Name="symbol" Mode="In" Type="String" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="getSectorsByIPO_Result">
+          <Property Type="String" Name="Sector" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Industry" Nullable="true" />
+          <Property Type="Decimal" Name="MarketCapitalSum" Nullable="true" Precision="19" />
+          <Property Type="Int16" Name="IPOYear" Nullable="true" />
+          <Property Type="Int16" Name="co" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="proc_LessRevenuePeers_Result">
+          <Property Type="Int32" Name="CompanyId" Nullable="false" />
+          <Property Type="String" Name="CompanyName" Nullable="true" MaxLength="250" />
+          <Property Type="Decimal" Name="TotalRevenue" Nullable="true" Precision="19" />
+        </ComplexType>
+        <ComplexType Name="proc_MoreRevenuePeers_Result">
+          <Property Type="Int32" Name="CompanyId" Nullable="false" />
+          <Property Type="String" Name="CompanyName" Nullable="true" MaxLength="250" />
+          <Property Type="Decimal" Name="TotalRevenue" Nullable="true" Precision="19" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="FinanceModelStoreContainer" CdmEntityContainer="FinanceEntities">
+          <EntitySetMapping Name="Companys">
+            <EntityTypeMapping TypeName="FinanceModel.Company">
+              <MappingFragment StoreEntitySet="Companys">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Symbol" ColumnName="Symbol" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="LastSale" ColumnName="LastSale" />
+                <ScalarProperty Name="MarketCapital" ColumnName="MarketCapital" />
+                <ScalarProperty Name="ADRTSO" ColumnName="ADRTSO" />
+                <ScalarProperty Name="IPOYear" ColumnName="IPOYear" />
+                <ScalarProperty Name="Sector" ColumnName="Sector" />
+                <ScalarProperty Name="Industry" ColumnName="Industry" />
+                <ScalarProperty Name="QuoteSite" ColumnName="QuoteSite" />
+                <ScalarProperty Name="Exchange" ColumnName="Exchange" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="IncomeStatements">
+            <EntityTypeMapping TypeName="FinanceModel.IncomeStatement">
+              <MappingFragment StoreEntitySet="IncomeStatement">
+                <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
+                <ScalarProperty Name="StatementId" ColumnName="StatementId" />
+                <ScalarProperty Name="StatementDate" ColumnName="StatementDate" />
+                <ScalarProperty Name="TotalRevenue" ColumnName="TotalRevenue" />
+                <ScalarProperty Name="CostofRevenue" ColumnName="CostofRevenue" />
+                <ScalarProperty Name="GrossProfit" ColumnName="GrossProfit" />
+                <ScalarProperty Name="OperatingExpenses" ColumnName="OperatingExpenses" />
+                <ScalarProperty Name="SalesGenAdmin" ColumnName="SalesGenAdmin" />
+                <ScalarProperty Name="NonRecurringItems" ColumnName="NonRecurringItems" />
+                <ScalarProperty Name="OtherOperatingItems" ColumnName="OtherOperatingItems" />
+                <ScalarProperty Name="OperatingIncome" ColumnName="OperatingIncome" />
+                <ScalarProperty Name="AddlIncExpitems" ColumnName="AddlIncExpitems" />
+                <ScalarProperty Name="EarningsBefIntTax" ColumnName="EarningsBefIntTax" />
+                <ScalarProperty Name="InterestExpense" ColumnName="InterestExpense" />
+                <ScalarProperty Name="EarningsBeforeTax" ColumnName="EarningsBeforeTax" />
+                <ScalarProperty Name="IncomeTax" ColumnName="IncomeTax" />
+                <ScalarProperty Name="MinorityInterest" ColumnName="MinorityInterest" />
+                <ScalarProperty Name="EquityEarnLossUnconSubs" ColumnName="EquityEarnLossUnconSubs" />
+                <ScalarProperty Name="NetIncomeContOperations" ColumnName="NetIncomeContOperations" />
+                <ScalarProperty Name="NetIncome" ColumnName="NetIncome" />
+                <ScalarProperty Name="NetIncApptoComShareholders" ColumnName="NetIncApptoComShareholders" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionName="FinanceModel.Store.ufn_LessRevenuePeers" FunctionImportName="ufn_LessRevenuePeers">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FinanceModel.ufn_LessRevenuePeers_Result">
+                <ScalarProperty Name="Revenue" ColumnName="Revenue" />
+                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionName="FinanceModel.Store.ufn_MaxStmtDate" FunctionImportName="ufn_MaxStmtDate">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FinanceModel.ufn_MaxStmtDate_Result">
+                <ScalarProperty Name="companyId" ColumnName="companyId" />
+                <ScalarProperty Name="StatementDate" ColumnName="StatementDate" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionName="FinanceModel.Store.ufn_MoreRevenuePeers" FunctionImportName="ufn_MoreRevenuePeers">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FinanceModel.ufn_MoreRevenuePeers_Result">
+                <ScalarProperty Name="Revenue" ColumnName="Revenue" />
+                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionName="FinanceModel.Store.ufn_TargetRevenue" FunctionImportName="ufn_TargetRevenue">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FinanceModel.ufn_TargetRevenue_Result">
+                <ScalarProperty Name="Revenue" ColumnName="Revenue" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="getSectorsByIPO" FunctionName="FinanceModel.Store.getSectorsByIPO">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FinanceModel.getSectorsByIPO_Result">
+                <ScalarProperty Name="Sector" ColumnName="Sector" />
+                <ScalarProperty Name="Industry" ColumnName="Industry" />
+                <ScalarProperty Name="MarketCapitalSum" ColumnName="MarketCapitalSum" />
+                <ScalarProperty Name="IPOYear" ColumnName="IPOYear" />
+                <ScalarProperty Name="co" ColumnName="co" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="proc_LessRevenuePeers" FunctionName="FinanceModel.Store.proc_LessRevenuePeers">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FinanceModel.proc_LessRevenuePeers_Result">
+                <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
+                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+                <ScalarProperty Name="TotalRevenue" ColumnName="TotalRevenue" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="proc_MoreRevenuePeers" FunctionName="FinanceModel.Store.proc_MoreRevenuePeers">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="FinanceModel.proc_MoreRevenuePeers_Result">
+                <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
+                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+                <ScalarProperty Name="TotalRevenue" ColumnName="TotalRevenue" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
